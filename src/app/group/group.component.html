@@ -1,0 +1,230 @@
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+
+    <form *ngIf="session.isGroupAdmin == true || session.isSuperAdmin == true">
+      <input
+        type="text"
+        id="login"
+        class="fadeIn second"
+        name="groupname"
+        placeholder="Enter new Group name"
+        [(ngModel)]="groupname"
+        autofocus
+        required
+      />
+
+      <p>
+        Choose Group Admin 1*:<select
+          name="assist1"
+          [(ngModel)]="assist1"
+          required
+        >
+          <option *ngFor="let user of users" [ngValue]="user.username">{{
+            user.username
+          }}</option>
+        </select>
+      </p>
+
+      <p>
+        Choose Group Admin 2:<select name="assist2" [(ngModel)]="assist2">
+          <option value=""></option>
+          <option *ngFor="let user of users" [ngValue]="user.username">{{
+            user.username
+          }}</option>
+        </select>
+      </p>
+
+      <input
+        type="submit"
+        name="submit"
+        class="fadeIn fourth"
+        value="Create Group"
+        (click)="createGroup(session.username)"
+      />
+    </form>
+  </div>
+</div>
+
+<h2>List of Groups and Members</h2>
+
+<div class="container bootstrap snippet">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="main-box no-header clearfix">
+        <div class="main-box-body clearfix">
+          <div class="table-responsive">
+            <table class="table user-list">
+              <!-- Column names -->
+              <thead>
+                <tr>
+                  <th><span>Group Name</span></th>
+                  <th class="text-center"><span>Group Admin</span></th>
+                  <th class="text-center"><span>Group Assist 1</span></th>
+                  <th class="text-center"><span>Group Assist 2</span></th>
+                  <th class="text-center"><span>Members</span></th>
+                  <th><span>Channels</span></th>
+                </tr>
+              </thead>
+              <!-- Body -->
+              <tbody *ngFor="let group of groups">
+                <tr
+                  *ngIf="
+                    session.isSuperAdmin == true ||
+                    group.group_admin == session.username ||
+                    group.group_assist_1 == session.username ||
+                    group.group_assist_2 == session.username ||
+                    group.members.indexOf(session.username) >= 0
+                  "
+                >
+                  <!-- Group name column -->
+                  <td>
+                    <h4 class="user-link">
+                      {{ group.group_name }}
+                      <button
+                        *ngIf="
+                          group.group_admin == session.username ||
+                          session.isSuperAdmin == true
+                        "
+                        (click)="removeGroup(group.group_name)"
+                        class="btn btn-danger btn-sm"
+                      >
+                        Remove {{ group.group_name }} group
+                      </button>
+                    </h4>
+                  </td>
+                  <!-- Group admin column -->
+                  <td class="text-center">
+                    <span class="label label-default">{{
+                      group.group_admin
+                    }}</span>
+                  </td>
+                  <!-- Group assist 1 column -->
+                  <td class="text-center">
+                    <span class="label label-default">{{
+                      group.group_assist_1
+                    }}</span>
+                  </td>
+                  <!-- Group assist 2 column -->
+                  <td class="text-center">
+                    <span class="label label-default">{{
+                      group.group_assist_2
+                    }}</span>
+                  </td>
+                  <!-- Members column -->
+                  <td>
+                    <!-- Getting list of membets -->
+                    <ul>
+                      <li
+                        *ngFor="let member of group.members"
+                        style="list-style: none"
+                        class="list-members"
+                      >
+                        <span>{{ member }}</span
+                        ><button
+                          (click)="removeMember(member, group.group_name)"
+                          *ngIf="
+                            (group.group_admin == session.username ||
+                              group.group_assist_1 == session.username ||
+                              group.group_assist_2 == session.username ||
+                              session.isSuperAdmin == true) &&
+                            member !== session.username
+                          "
+                          class="btn btn-warning btn-sm"
+                        >
+                          Remove {{ member }}
+                        </button>
+                      </li>
+                    </ul>
+                    <!-- Add new user to group -->
+                    <p
+                      *ngIf="
+                        group.group_admin == session.username ||
+                        group.group_assist_1 == session.username ||
+                        group.group_assist_2 == session.username ||
+                        session.isSuperAdmin == true
+                      "
+                    >
+                      <select name="user" [(ngModel)]="selectedUser">
+                        <option
+                          *ngFor="let user of users"
+                          [ngValue]="user.username"
+                          >{{ user.username }}</option
+                        >
+                      </select>
+
+                      <input
+                        [(ngModel)]="selectedGroup"
+                        name="selectedGroup"
+                        [value]="group.group_name"
+                        hidden
+                      />
+
+                      <button
+                        (click)="addMember(group.group_name, group._id)"
+                        class="btn btn-success btn-sm"
+                      >
+                        Add
+                      </button>
+                    </p>
+                    <!-- End add user -->
+                  </td>
+                  <!-- Channels column -->
+                  <td>
+                    <!-- Getting list of channels -->
+                    <ul>
+                      <li *ngFor="let channel of group.channels">
+                        <a
+                          [routerLink]="[
+                            '/channel',
+                            group.group_name,
+                            channel.channel_name
+                          ]"
+                          *ngIf="
+                            channel.channel_members.indexOf(
+                              session.username
+                            ) !== -1 || session.isSuperAdmin == true
+                          "
+                          (click)="
+                            goToChannel(group.group_name, channel.channel_name)
+                          "
+                        >
+                          {{ channel.channel_name }}
+                        </a>
+                      </li>
+                    </ul>
+                    <!-- Create new channel -->
+                    <p
+                      *ngIf="
+                        group.group_admin == session.username ||
+                        group.group_assist_1 == session.username ||
+                        group.group_assist_2 == session.username ||
+                        session.isSuperAdmin == true
+                      "
+                    >
+                      <input
+                        [(ngModel)]="channelName"
+                        name="channelName"
+                        type="input"
+                      />
+                      <button
+                        (click)="
+                          createChannel(group.group_name, session.username)
+                        "
+                        class="btn btn-info btn-sm"
+                      >
+                        Create channel
+                      </button>
+                    </p>
+                    <!-- End create channel -->
+                  </td>
+                </tr>
+              </tbody>
+              <!-- End body -->
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

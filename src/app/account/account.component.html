@@ -1,0 +1,47 @@
+<div class="container">
+  <span
+    ><h3>{{ user.username }}</h3></span
+  >
+  <p itemprop="email">
+    <i class="fa fa-envelope"> </i>
+    <a href="mailto:user.email">{{ user.email }}</a>
+  </p>
+  <p itemprop="briefcase">
+    <i class="fa fa-briefcase"> </i>Type:
+    <span *ngIf="user.isSuperAdmin == true">Super Admin,</span>
+    <span *ngIf="user.isGroupAdmin == true">
+      Group Admin,
+    </span>
+    <span *ngIf="user.isGroupAdmin == false || user.isSuperAdmin == false"
+      >User</span
+    >
+  </p>
+
+  <div class="col-lg-12 centered-text">
+    Your Available Actions
+  </div>
+  <div class="panel-footer">
+    <div class="row">
+      <div id="social-links" class=" col-lg-12">
+        <div class="row">
+          <div class="col-xs-6 col-sm-3 col-md-2 col-lg-3 social-btn-holder">
+            <a routerLink="/group">
+              <i class="fa fa-bars"></i> List of Groups
+            </a>
+          </div>
+          <div class="col-xs-6 col-sm-3 col-md-2 col-lg-3 social-btn-holder">
+            <a *ngIf="user.isSuperAdmin == true" routerLink="/register">
+              <i class="fa fa-user-plus"></i> Create User
+            </a>
+          </div>
+          <div class="col-xs-6 col-sm-3 col-md-2 col-lg-3 social-btn-holder">
+            <a *ngIf="user.isSuperAdmin == true" routerLink="/remove_user">
+              <i class="fa fa-users" aria-hidden="true"></i> List of Users
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

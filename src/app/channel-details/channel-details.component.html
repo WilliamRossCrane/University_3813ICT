@@ -1,0 +1,184 @@
+<div class="container">
+  <h3 class=" text-center">
+    "{{ channel_name }}" channel in "{{ group_name }}"
+    <button
+      *ngIf="
+        session.isSuperAdmin == true ||
+        group.group_admin == session.username ||
+        group.group_assist_1 == session.username ||
+        group.group_assist_2 == session.username
+      "
+      (click)="removeChannel(group_name, channel_name)"
+      class="btn btn-danger btn-sm"
+    >
+      Remove this channel
+    </button>
+  </h3>
+  <div class="messaging">
+    <div class="inbox_msg">
+      <div class="inbox_people">
+        <div class="inbox_chat">
+          <ul
+            *ngFor="let member of channelMembers"
+            style="list-style-type:none"
+          >
+            <div class="chat_list">
+              <div class="chat_people">
+                <div class="chat_ib">
+                  <li>
+                    <h5>
+                      {{ member }}
+
+                      <span class="chat_date">
+                        <p *ngIf="session.username == member">
+                          (you are online)
+                        </p>
+                        <button
+                          *ngIf="
+                            session.isSuperAdmin == true ||
+                            group.group_admin == session.username ||
+                            group.group_assist_1 == session.username ||
+                            group.group_assist_2 == session.username ||
+                            session.username !== member
+                          "
+                          (click)="
+                            removeMember(member, group_name, channel_name)
+                          "
+                        >
+                          Remove user '{{ member }}''
+                        </button></span
+                      >
+                    </h5>
+                  </li>
+                </div>
+              </div>
+            </div>
+          </ul>
+          <div
+            id="chat_people"
+            *ngIf="
+              session.isSuperAdmin == true ||
+              group.group_admin == session.username ||
+              group.group_assist_1 == session.username ||
+              group.group_assist_2 == session.username
+            "
+          >
+            <select
+              name="selectedUserChannel"
+              [(ngModel)]="selectedUserChannel"
+            >
+              <option *ngFor="let member of group.members" [ngValue]="member">{{
+                member
+              }}</option>
+            </select>
+            <input name="selectedChannel" [value]="group_name" hidden />
+            <button
+              (click)="addUserToChannel(group_name, channel_name)"
+              class="btn btn-success btn-sm"
+            >
+              Add
+            </button>
+          </div>
+
+          <div id="chat_people">
+            <button (click)="leaveChannel()" class="btn btn-danger btn-sm">
+              Leave Channel
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mesgs">
+        <div class="msg_history" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+          <div class="incoming_msg">
+            <div class="incoming_msg_img">
+              <img
+                src="https://ptetutorials.com/images/user-profile.png"
+                alt="sunil"
+              />
+            </div>
+            <div class="received_msg">
+              <div class="received_withd_msg">
+                <!-- <p>Test which is a new approach to have all solutions</p>
+                <span class="time_date"> 11:04 AM | September 27</span> -->
+                <p>{{ noticemessage }}</p>
+                <span class="time_date">System Message</span>
+                <hr />
+              </div>
+            </div>
+          </div>
+
+          <div class="incoming_msg" *ngFor="let message of messages">
+            <div class="incoming_msg_img">
+              <img src="http://localhost:3000/images/{{ message.image }}" />
+            </div>
+            <div class="received_msg">
+              <div
+                class="received_withd_msg"
+                *ngIf="message.message != undefined"
+              >
+                <p>{{ message.message }}</p>
+                <span class="time_date">{{ message.username }}</span>
+                <hr />
+              </div>
+
+              <div class="received_withd_msg" *ngIf="message.message == null">
+                <span class="time_date">{{ message.username }}</span>
+                <hr />
+              </div>
+
+              <div
+                class="received_withd_msg"
+                *ngIf="message.sendingImage != null"
+              >
+                <p>
+                  <img
+                    src="http://localhost:3000/images/{{
+                      message.sendingImage
+                    }}"
+                  />
+                </p>
+                <span class="time_date">{{ message.username }}</span>
+                <hr />
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="type_msg">
+          <div class="input_msg_write">
+            <input
+              type="text"
+              class="write_msg"
+              placeholder="Type a message"
+              name="messagecontent"
+              [(ngModel)]="messagecontent"
+              (keydown.enter)="chat()"
+            />
+
+            <button class="msg_send_btn" type="button" (click)="chat()">
+              <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <div class="type_msg" id="image">
+          <input
+            type="file"
+            id="file"
+            class="fadeIn third"
+            name="imageupload"
+            (change)="onFileSelected($event)"
+            required
+          />
+          <button
+            class="msg_send_btn"
+            type="button"
+            (click)="chat()"
+            id="photo"
+          >
+            <i class="fa fa-photo" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

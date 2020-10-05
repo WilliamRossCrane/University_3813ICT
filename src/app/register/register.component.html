@@ -1,0 +1,74 @@
+<h1>Register Page</h1>
+
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+
+    <!-- Login Form -->
+    <form>
+      <input
+        type="email"
+        id="login"
+        class="fadeIn second"
+        name="login"
+        placeholder="Register new Email"
+        [(ngModel)]="emailRegister"
+        autofocus
+        required
+      />
+      <input
+        type="username"
+        id="username"
+        class="fadeIn second"
+        name="usernameRegister"
+        placeholder="Register new User name"
+        [(ngModel)]="usernameRegister"
+        required
+      />
+      <input
+        type="password"
+        id="password"
+        class="fadeIn third"
+        name="passwordRegister"
+        placeholder="Password"
+        [(ngModel)]="passwordRegister"
+        required
+      />
+
+      <input
+        type="file"
+        id="file"
+        class="fadeIn third"
+        name="imageupload"
+        (change)="onFileSelected($event)"
+        required
+      />
+
+      <p>
+        Group Admin ?
+        <select name="groupadmin" [(ngModel)]="groupadmin">
+          <option selected="selected" [ngValue]="false">No</option>
+          <option [ngValue]="true">Yes</option>
+        </select>
+      </p>
+      <p>
+        Super Admin ?
+        <select name="superadmin" [(ngModel)]="superadmin">
+          <option selected="selected" [ngValue]="false">No</option>
+          <option [ngValue]="true">Yes</option>
+        </select>
+      </p>
+
+      <input
+        type="submit"
+        id="submit"
+        class="fadeIn fourth"
+        value="Create Account"
+        (click)="imageUpload()"
+        (click)="createAccount()"
+      />
+
+      <!-- <button type="button" (click)="imageUpload()">Image</button> -->
+    </form>
+  </div>
+</div>
