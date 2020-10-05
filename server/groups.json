@@ -1,0 +1,21 @@
+{
+  "group_list": [
+    {
+      "group_name": "aaa",
+      "group_admin": "Super Admin A",
+      "group_assist_1": "123z",
+      "group_assist_2": "",
+      "confirm": false,
+      "members": ["Super Admin A", "123z", "123x"]
+    },
+    {
+      "group_name": "nnnn",
+      "group_admin": "Super Admin A",
+      "group_assist_1": "Super Admin A",
+      "group_assist_2": "",
+      "confirm": false,
+      "members": ["Super Admin A", "Super Admin A"],
+      "_id": "5d82191f72d1201986b940dd"
+    }
+  ]
+}
